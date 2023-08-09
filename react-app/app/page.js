@@ -61,8 +61,8 @@ export default function Home() {
           <div className={`md:hidden ${state ? "mx-2 pb-5" : "hidden"}`}>
             <Brand />
           </div>
-          <nav className={`pb-5 md:text-sm ${state ? "absolute h-screen top-0 inset-x-0 bg-[#ffc412] shadow-lg rounded-xl border mx-2 mt-2 md:shadow-none md:border-none md:mx-0 md:mt-0 md:relative md:bg-transparent" : ""}`}>
-            <div className="items-center max-w-screen-xl px-4 mx-auto gap-x-14 md:flex md:px-8">
+          <nav className={`pb-5 md:text-sm ${state ? "absolute bg-[#ffb012] h-[55vh] lg:h-full top-0 inset-x-0  shadow-lg rounded-xl mx-2 mt-2 md:shadow-none md:border-none md:mx-0 md:mt-0 md:relative md:bg-transparent" : ""}`}>
+            <div className="items-center  max-w-screen-xl px-5 mx-auto gap-x-14 md:flex md:px-8">
               <Brand />
               <div className={`flex-1 items-center mt-8 md:mt-0 md:flex ${state ? 'block' : 'hidden'} `}>
                 <ul className="items-center justify-center w-full flex-1 space-y-6 md:flex md:space-x-6 md:space-y-0">
@@ -103,7 +103,7 @@ export default function Home() {
                   News
                 </span>
                 <p className='flex items-center'>
-                  Read the launch post from here
+                  Read the launch post
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                     <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
                   </svg>
