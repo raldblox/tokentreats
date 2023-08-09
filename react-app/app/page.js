@@ -175,7 +175,7 @@ export default function Home() {
                 <h1 className='text-lg font-bold mt-10 uppercase text-center'><span className='border border-green-900 bg-[#00000027] rounded-full px-4 py-2 '>Redeem</span> your rewards</h1>
               </div>
               <div className='h-full w-full aspect-square p-5 rounded-[30px] bg-gradient-to-t lg:bg-gradient-to-tl from-[#ffc4128c] to-[transparent]'>
-                <h1>Pick, Redeem, Repeat – We Puts Rewards, Credentials, Digital Idenity, NFT Marketplaces, and DeFi Exchanges in Your Hands!</h1>
+                <h1>Pick, Redeem, Repeat – TokenTreats Puts Loyalty Rewards, Verifiable Credentials, Digital Identities, NFT Marketplaces, CrossChain Messaging and Decentralized Finance in one place!</h1>
                 <h2></h2>
               </div>
 
