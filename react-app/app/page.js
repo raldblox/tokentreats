@@ -78,8 +78,8 @@ export default function Home() {
                     })
                   }
                 </ul>
-                <div className="items-center justify-end space-y-6 md:flex md:mt-0">
-                  <a href="javascript:void(0)" className='inline-flex items-center p-1 pr-2 text-sm font-medium border border-orange-900 rounded-full hover:shadow-xl group gap-x-2 bg-gradient-to-r hover:from-green-900 hover:to-green-700'>
+                <div className="items-center w-full mt-5 justify-center space-y-6 flex md:mt-0">
+                  <a href="javascript:void(0)" className='inline-flex w-fit justify-center items-center p-1 pr-2 text-sm font-medium border border-orange-900 rounded-full hover:shadow-xl group gap-x-2 bg-gradient-to-r hover:from-green-900 hover:to-green-700'>
                     <span className='inline-block px-3 py-1 text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
                       CONNECT
                     </span>
@@ -113,7 +113,7 @@ export default function Home() {
                 We make your <span className='text-green-900'>loyalty</span> dreams come true.
               </h1>
               <hr />
-              <p className='text-lg font-bold max-w-[28vw]'>
+              <p className='text-lg font-bold lg:max-w-[28vw]'>
                 from <span className='font-black'>fungibles</span> to <span className='font-black'>non-fungibles</span>, tokentreats lets you craft and define your dream rewards!
               </p>
               <div className='flex items-center gap-x-3 sm:text-sm'>
@@ -131,9 +131,9 @@ export default function Home() {
                 </a>
               </div>
             </div>
-            <div className='grid w-full grid-cols-2 rounded-[30px] lg:mt-[50vh]'>
+            <div className='grid w-full lg:grid-cols-2 gap-10 lg:gap-0 rounded-[30px] mt-10 lg:mt-[50vh]'>
               {/* Replace with your image */}
-              <div className='w-full grid content-between col-span-1 p-5 rounded-[30px] bg-gradient-to-br from-[#ffc41284]  to-transparent'>
+              <div className='w-full grid content-between col-span-1 p-5 rounded-[30px] bg-gradient-to-b lg:bg-gradient-to-br from-[#ffc41284]  to-transparent'>
                 <h1 className='text-3xl font-bold gradient'>Surprise Your<br />Loyal Members</h1>
 
                 <p className='text-sm'>QuickSend lets you brighten someone's day in a flash. Wallet address, USD amount, a dash of thoughtfulness – and voila, tokens and smiles are on their way!</p>
@@ -174,7 +174,7 @@ export default function Home() {
                 <h2 className='text-2xl font-bold gradient uppercase'>One, Two, Treat!</h2>
                 <h1 className='text-lg font-bold mt-10 uppercase text-center'><span className='border border-green-900 bg-[#00000027] rounded-full px-4 py-2 '>Redeem</span> your rewards</h1>
               </div>
-              <div className='h-full w-full aspect-square p-5 rounded-[30px] bg-gradient-to-tl from-[#ffc4128c] to-[transparent]'>
+              <div className='h-full w-full aspect-square p-5 rounded-[30px] bg-gradient-to-t lg:bg-gradient-to-tl from-[#ffc4128c] to-[transparent]'>
                 <h1>Pick, Redeem, Repeat – We Puts Rewards, Credentials, Digital Idenity, NFT Marketplaces, and DeFi Exchanges in Your Hands!</h1>
                 <h2></h2>
               </div>
