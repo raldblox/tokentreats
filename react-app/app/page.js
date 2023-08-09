@@ -78,9 +78,9 @@ export default function Home() {
                     })
                   }
                 </ul>
-                <div className="items-center w-full mt-5 justify-center space-y-6 flex md:mt-0">
+                <div className="items-center w-full mt-5 justify-center lg:justify-end space-y-6 flex md:mt-0">
                   <a href="javascript:void(0)" className='inline-flex w-fit justify-center items-center p-1 pr-2 text-sm font-medium border border-orange-900 rounded-full hover:shadow-xl group gap-x-2 bg-gradient-to-r hover:from-green-900 hover:to-green-700'>
-                    <span className='inline-block px-3 py-1 text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
+                    <span className='inline-block px-3 bg-[#00000057] py-1 text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
                       CONNECT
                     </span>
                     <p className='flex items-center'>
@@ -99,7 +99,7 @@ export default function Home() {
           <div className="max-w-screen-xl gap-16 px-4 mx-auto py-28 md:px-8 md:flex">
             <div className='flex-none max-w-lg space-y-10'>
               <a href="javascript:void(0)" className='inline-flex items-center p-1 pr-6 text-sm font-medium border border-orange-900 rounded-full hover:shadow-xl group gap-x-6 bg-gradient-to-r hover:from-green-900 hover:to-green-700'>
-                <span className='inline-block px-3 py-1 text-yellow-200 uppercase rounded-full group-hover:bg-green-700'>
+                <span className='inline-block px-3 py-1 bg-[#00000057] text-yellow-200 uppercase rounded-full group-hover:bg-green-700'>
                   News
                 </span>
                 <p className='flex items-center'>
