@@ -174,7 +174,7 @@ export default function Home() {
               <div className='h-full group w-full grid content-between aspect-square col-span-1 p-5 card'>
                 <h2 className='text-2xl font-bold gradient'>One, Two, Treats!</h2>
                 <div className='text-sm w-full flex items-center gap-2 font-bold mt-10 uppercase text-center'>
-                  <button className='group-hover:bg-green-900 uppercase'>Redeem</button>
+                  <button className='bg-[#00000033] font-bold text-green-950 group-hover:text-white border-orange-600 group-hover:bg-green-900 uppercase'>Redeem</button>
                   your rewards now!
                 </div>
               </div>
@@ -182,7 +182,6 @@ export default function Home() {
                 <h1><span className='italic font-bold'>Pick, Redeem, Repeat</span> – TokenTreats Fuses Blockchain Tokens, Verifiable Credentials, Digital Identities, NFT Marketplaces, Cross-Chain Messaging, and Decentralized Finance into a Single Hub for Your Loyalty Journey!</h1>
                 <h2></h2>
               </div>
-
             </div>
           </div>
         </section>
