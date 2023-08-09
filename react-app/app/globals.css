@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #8f6b00;
-  --font-color: #111111;
+  --background: #dd9933;
+  --font-color: #003333;
   --highlight: #ffbf00;
   --nav-height: 50px;
 }
@@ -28,9 +28,11 @@ footer {
   @apply transition-all duration-300;
 }
 
-button {
+button,
+.button {
   background: var(--highlight);
   color: var(--background);
+  @apply px-4 py-2 font-medium text-white bg-gray-800 rounded-full gap-x-1 hover:bg-green-900 active:bg-gray-900 md:inline-flex hover:shadow-md;
 }
 
 .highlight {
@@ -44,4 +46,27 @@ section {
 
 .shade {
   background: #0000003f;
+}
+
+.card {
+  @apply shadow-lg hover:shadow-md bg-[#ffc412b3] hover:bg-transparent hover:border-[#dd9933] rounded-[40px] border border-orange-300;
+}
+
+hr {
+  display: block;
+  background: var(--highlight);
+  height: 0.25rem;
+  width: 6.25rem;
+  border: none;
+  margin: 1.125rem 0 1.875rem 0;
+}
+
+.gradient {
+  background-image: linear-gradient(45deg, #003333, #004138);
+  background-size: 100%;
+  background-repeat: repeat;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-background-clip: text;
+  -moz-text-fill-color: transparent;
 }
