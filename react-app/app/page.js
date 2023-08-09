@@ -31,6 +31,7 @@ export default function Home() {
           width={200}
           height={50}
           alt="Token Treats Logo"
+          className=''
         />
       </a>
       <div className="md:hidden">
@@ -118,7 +119,7 @@ export default function Home() {
               </p>
               <div className='flex items-center gap-x-3 sm:text-sm'>
                 <button href="javascript:void(0)" className="flex items-center justify-center ">
-                  Get started
+                  Join the waitlist
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                     <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
                   </svg>
@@ -170,9 +171,12 @@ export default function Home() {
                   QuickSend Your Treats
                 </button>
               </div>
-              <div className='h-full w-full grid content-between aspect-square col-span-1 p-5 card'>
-                <h2 className='text-2xl font-bold gradient uppercase'>One, Two, Treats!</h2>
-                <h1 className='text-lg font-bold mt-10 uppercase text-center'><span className='border border-green-900 bg-[#00000027] rounded-full px-4 py-2 '>Redeem</span> your rewards</h1>
+              <div className='h-full group w-full grid content-between aspect-square col-span-1 p-5 card'>
+                <h2 className='text-2xl font-bold gradient'>One, Two, Treats!</h2>
+                <div className='text-sm w-full flex items-center gap-2 font-bold mt-10 uppercase text-center'>
+                  <button className='group-hover:bg-green-900 uppercase'>Redeem</button>
+                  your rewards now!
+                </div>
               </div>
               <div className='h-full w-full aspect-square p-5 rounded-[30px] bg-gradient-to-t lg:bg-gradient-to-tl from-[#ffc4128c] to-[transparent]'>
                 <h1><span className='italic font-bold'>Pick, Redeem, Repeat</span> – TokenTreats Fuses Blockchain Tokens, Verifiable Credentials, Digital Identities, NFT Marketplaces, Cross-Chain Messaging, and Decentralized Finance into a Single Hub for Your Loyalty Journey!</h1>
