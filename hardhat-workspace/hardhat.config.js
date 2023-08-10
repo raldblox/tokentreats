@@ -39,11 +39,17 @@ module.exports = {
       accounts: [process.env.PRIVATE_KEY],
       gasPrice: 1000000000,
     },
-    // for testnet
     basegoerli: {
       url: 'https://goerli.base.org',
       accounts: [process.env.PRIVATE_KEY],
       gasPrice: 1000000000,
+    },
+    zoragoerli: {
+      url: 'https://testnet.rpc.zora.energy/',
+      accounts: [process.env.PRIVATE_KEY],
+    }, zoramainnet: {
+      url: 'https://mainnet.rpc.zora.energy/',
+      accounts: [process.env.PRIVATE_KEY],
     },
   },
   etherscan: {
