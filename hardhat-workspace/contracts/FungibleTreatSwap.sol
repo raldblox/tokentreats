@@ -8,11 +8,11 @@ import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 contract FungibleTreatSwap {
     ISwapRouter public immutable swapRouter;
 
-    // This example swaps DAI/WETH9 for single path swaps and DAI/USDC/WETH9 for multi path swaps.
+    // This example swaps tokenIn/tokenOut for single path swaps and tokenIn/tokenOut for multi path swaps.
 
-    address public constant DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
-    address public constant WETH9 = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
-    address public constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
+    // address public constant DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
+    // address public constant WETH9 = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
+    // address public constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
 
     // For this example, we will set the pool fee to 0.3%.
     uint24 public constant poolFee = 3000;
@@ -21,33 +21,35 @@ contract FungibleTreatSwap {
         swapRouter = _swapRouter;
     }
 
-    /// @notice swapExactInputSingle swaps a fixed amount of DAI for a maximum possible amount of WETH9
-    /// using the DAI/WETH9 0.3% pool by calling `exactInputSingle` in the swap router.
-    /// @dev The calling address must approve this contract to spend at least `amountIn` worth of its DAI for this function to succeed.
-    /// @param amountIn The exact amount of DAI that will be swapped for WETH9.
-    /// @return amountOut The amount of WETH9 received.
+    /// @notice swapExactInputSingle swaps a fixed amount of tokenIn for a maximum possible amount of tokenOut
+    /// using the tokenIn/tokenOut 0.3% pool by calling `exactInputSingle` in the swap router.
+    /// @dev The calling address must approve this contract to spend at least `amountIn` worth of its tokenIn for this function to succeed.
+    /// @param amountIn The exact amount of tokenIn that will be swapped for tokenOut.
+    /// @return amountOut The amount of tokenOut received.
     function swapExactInputSingle(
-        uint256 amountIn
+        uint256 amountIn,
+        address tokenIn,
+        address tokenOut
     ) external returns (uint256 amountOut) {
         // msg.sender must approve this contract
 
-        // Transfer the specified amount of DAI to this contract.
+        // Transfer the specified amount of tokenIn to this contract.
         TransferHelper.safeTransferFrom(
-            DAI,
+            tokenIn,
             msg.sender,
             address(this),
             amountIn
         );
 
-        // Approve the router to spend DAI.
-        TransferHelper.safeApprove(DAI, address(swapRouter), amountIn);
+        // Approve the router to spend tokenIn.
+        TransferHelper.safeApprove(tokenIn, address(swapRouter), amountIn);
 
         // Naively set amountOutMinimum to 0. In production, use an oracle or other data source to choose a safer value for amountOutMinimum.
         // We also set the sqrtPriceLimitx96 to be 0 to ensure we swap our exact input amount.
         ISwapRouter.ExactInputSingleParams memory params = ISwapRouter
             .ExactInputSingleParams({
-                tokenIn: DAI,
-                tokenOut: WETH9,
+                tokenIn: tokenIn,
+                tokenOut: tokenOut,
                 fee: poolFee,
                 recipient: msg.sender,
                 deadline: block.timestamp,
@@ -60,32 +62,38 @@ contract FungibleTreatSwap {
         amountOut = swapRouter.exactInputSingle(params);
     }
 
-    /// @notice swapExactOutputSingle swaps a minimum possible amount of DAI for a fixed amount of WETH.
-    /// @dev The calling address must approve this contract to spend its DAI for this function to succeed. As the amount of input DAI is variable,
+    /// @notice swapExactOutputSingle swaps a minimum possible amount of tokenIn for a fixed amount of WETH.
+    /// @dev The calling address must approve this contract to spend its tokenIn for this function to succeed. As the amount of input tokenIn is variable,
     /// the calling address will need to approve for a slightly higher amount, anticipating some variance.
-    /// @param amountOut The exact amount of WETH9 to receive from the swap.
-    /// @param amountInMaximum The amount of DAI we are willing to spend to receive the specified amount of WETH9.
-    /// @return amountIn The amount of DAI actually spent in the swap.
+    /// @param amountOut The exact amount of tokenOut to receive from the swap.
+    /// @param amountInMaximum The amount of tokenIn we are willing to spend to receive the specified amount of tokenOut.
+    /// @return amountIn The amount of tokenIn actually spent in the swap.
     function swapExactOutputSingle(
         uint256 amountOut,
-        uint256 amountInMaximum
+        uint256 amountInMaximum,
+        address tokenIn,
+        address tokenOut
     ) external returns (uint256 amountIn) {
-        // Transfer the specified amount of DAI to this contract.
+        // Transfer the specified amount of tokenIn to this contract.
         TransferHelper.safeTransferFrom(
-            DAI,
+            tokenIn,
             msg.sender,
             address(this),
             amountInMaximum
         );
 
-        // Approve the router to spend the specifed `amountInMaximum` of DAI.
+        // Approve the router to spend the specifed `amountInMaximum` of tokenIn.
         // In production, you should choose the maximum amount to spend based on oracles or other data sources to acheive a better swap.
-        TransferHelper.safeApprove(DAI, address(swapRouter), amountInMaximum);
+        TransferHelper.safeApprove(
+            tokenIn,
+            address(swapRouter),
+            amountInMaximum
+        );
 
         ISwapRouter.ExactOutputSingleParams memory params = ISwapRouter
             .ExactOutputSingleParams({
-                tokenIn: DAI,
-                tokenOut: WETH9,
+                tokenIn: tokenIn,
+                tokenOut: tokenOut,
                 fee: poolFee,
                 recipient: msg.sender,
                 deadline: block.timestamp,
@@ -100,9 +108,9 @@ contract FungibleTreatSwap {
         // For exact output swaps, the amountInMaximum may not have all been spent.
         // If the actual amount spent (amountIn) is less than the specified maximum amount, we must refund the msg.sender and approve the swapRouter to spend 0.
         if (amountIn < amountInMaximum) {
-            TransferHelper.safeApprove(DAI, address(swapRouter), 0);
+            TransferHelper.safeApprove(tokenIn, address(swapRouter), 0);
             TransferHelper.safeTransfer(
-                DAI,
+                tokenIn,
                 msg.sender,
                 amountInMaximum - amountIn
             );
