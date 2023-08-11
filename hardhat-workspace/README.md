@@ -10,4 +10,6 @@ npx hardhat test
 REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat run scripts/deploy.js
+npx hardhat run --network opgoerli scripts/deploy.js
+npx hardhat verify --network opgoerli [CONTRACT_ADDRESS]
 ```
