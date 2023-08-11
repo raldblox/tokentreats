@@ -53,8 +53,7 @@ contract TokenTreatsCore {
     }
 
     Treats private treats;
-    mapping(address => uint[]) public myTreats;
-    mapping(address => IERC20) public fungibleTreats;
+    mapping(uint => address) public myTreats;
 
     function createTreats(
         address receiver,
@@ -96,21 +95,26 @@ contract TokenTreatsCore {
             treats.tokenIn[treatIds] = tokenIn;
             treats.isFungible[treatIds] = isFungible;
             treats.file[treatIds] = file;
+            treats.isRedeemed[treatIds] = false;
+            myTreats[treatIds] = msg.sender;
             treatIds++;
         }
     }
 
-    function redeemTreats(address tokenOut) external {
+    function redeemTreats(address tokenOut, uint treatId) external {
+        require(tokenOut != address(0), "TokenOut not supported or invalid");
         require(
-            fungibleTreats[tokenOut] != IERC20(address(0)),
+            treats.isRedeemed[treatId],
+            "Fungible token not supported or invalid"
+        );
+        require(
+            treats.receiver[treatIds] == msg.sender,
             "Fungible token not supported or invalid"
         );
 
-        IERC20 fungibleTokenTreats = fungibleTreats[tokenOut];
-        uint256 fungibleTokenTreatsAmount = calculateFungibleTreatsAmount(); // reward calculation logic
+        // SingleSwap Logics
 
-        // transfer reward token to user
-        fungibleTokenTreats.safeTransfer(msg.sender, fungibleTokenTreatsAmount);
+        treats.isRedeemed[treatIds] = true;
     }
 
     function attestTreats(
