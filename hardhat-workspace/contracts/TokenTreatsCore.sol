@@ -44,8 +44,8 @@ contract TokenTreatsCore {
         mapping(uint => address) sender;
         mapping(uint => uint) amountIn;
         mapping(uint => uint) amountOut;
-        mapping(uint => uint) tokenIn;
-        mapping(uint => uint) tokenOut;
+        mapping(uint => address) tokenIn;
+        mapping(uint => address) tokenOut;
         mapping(uint => string) message;
         mapping(uint => string) file;
         mapping(uint => bool) isFungible;
@@ -87,19 +87,31 @@ contract TokenTreatsCore {
             "TokenIn Transfer Failed"
         );
 
-        treats.treatId.push(treatIds);
-        treats.receiver[treatIds] = receiver;
-        treats.sender[treatIds] = msg.sender;
-        treats.message[treatIds] = message;
-        if (isFungible) {
+        if (success) {
+            treats.treatId.push(treatIds);
+            treats.receiver[treatIds] = receiver;
+            treats.sender[treatIds] = msg.sender;
+            treats.message[treatIds] = message;
+            treats.amountIn[treatIds] = amountIn;
+            treats.tokenIn[treatIds] = tokenIn;
             treats.isFungible[treatIds] = isFungible;
-            treats.amount[treatIds] = amountIn;
             treats.file[treatIds] = file;
+            treatIds++;
         }
-        treatIds++;
     }
 
-    // Optimism Goerli UID#153
+    function redeemTreats(address tokenOut) external {
+        require(
+            fungibleTreats[tokenOut] != IERC20(address(0)),
+            "Fungible token not supported or invalid"
+        );
+
+        IERC20 fungibleTokenTreats = fungibleTreats[tokenOut];
+        uint256 fungibleTokenTreatsAmount = calculateFungibleTreatsAmount(); // reward calculation logic
+
+        // transfer reward token to user
+        fungibleTokenTreats.safeTransfer(msg.sender, fungibleTokenTreatsAmount);
+    }
 
     function attestTreats(
         bytes32 schema,
@@ -143,19 +155,6 @@ contract TokenTreatsCore {
         uint qty
     ) public {
         //
-    }
-
-    function redeemFungibleTokenTreats(address _rewardTokenAddress) external {
-        require(
-            fungibleTreats[_rewardTokenAddress] != IERC20(address(0)),
-            "Fungible token not supported or invalid"
-        );
-
-        IERC20 fungibleTokenTreats = fungibleTreats[_rewardTokenAddress];
-        uint256 fungibleTokenTreatsAmount = calculateFungibleTreatsAmount(); // reward calculation logic
-
-        // transfer reward token to user
-        fungibleTokenTreats.safeTransfer(msg.sender, fungibleTokenTreatsAmount);
     }
 
     function calculateFungibleTreatsAmount() internal pure returns (uint256) {
