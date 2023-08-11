@@ -1,14 +1,15 @@
 "use client"
 
+import Profile from '@/components/signin/Profile';
 import { CurrencyExchangeOutlined, FileUploadOutlined, MessageOutlined, WalletRounded } from '@mui/icons-material';
 import Image from 'next/image'
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default function Home() {
   const [state, setState] = useState(false)
 
-  // Replace javascript:void(0) paths with your paths
   const navigation = [
     { title: "Features", path: "javascript:void(0)" },
     { title: "Integrations", path: "javascript:void(0)" },
@@ -70,7 +71,7 @@ export default function Home() {
                   {
                     navigation.map((item, idx) => {
                       return (
-                        <li key={idx} className="text-gray-700 hover:text-gray-900">
+                        <li key={idx} className="text-white hover:text-gray-900">
                           <a href={item.path} className="block text-center w-full lg:w-fit">
                             {item.title}
                           </a>
@@ -80,17 +81,18 @@ export default function Home() {
                   }
                 </ul>
                 <div className="items-center w-full mt-5 justify-center lg:justify-end space-y-6 flex md:mt-0">
-                  <a href="javascript:void(0)" className='inline-flex w-fit justify-center items-center p-1 pr-2 text-sm font-medium border border-orange-900 rounded-full hover:shadow-xl group gap-x-2 bg-gradient-to-r hover:from-green-900 hover:to-green-700'>
-                    <span className='inline-block px-3 bg-[#00000057] py-1 text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
-                      CONNECT
-                    </span>
+                  <div href="javascript:void(0)" className='inline-flex w-fit justify-center items-center p-1 pr-2 text-sm font-medium border border-orange-900 rounded-full hover:shadow-xl group gap-x-2 bg-gradient-to-r hover:from-green-900 hover:to-green-700'>
+                    <a href="/api/auth/login" className='inline-block px-3 bg-[#00000057] py-1 text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
+                      LOG IN
+                    </a>
                     <p className='flex items-center'>
                       ACCOUNT
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                         <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
                       </svg>
                     </p>
-                  </a>
+                  </div>
+                  <Profile />
                 </div>
               </div>
             </div>
