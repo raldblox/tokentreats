@@ -39,9 +39,13 @@ contract TokenTreatsCore {
 
     struct Treats {
         uint256[] treatId;
+        mapping(uint => bool) isRedeemed;
         mapping(uint => address) receiver;
         mapping(uint => address) sender;
-        mapping(uint => uint) amount;
+        mapping(uint => uint) amountIn;
+        mapping(uint => uint) amountOut;
+        mapping(uint => uint) tokenIn;
+        mapping(uint => uint) tokenOut;
         mapping(uint => string) message;
         mapping(uint => string) file;
         mapping(uint => bool) isFungible;
@@ -54,23 +58,42 @@ contract TokenTreatsCore {
 
     function createTreats(
         address receiver,
-        uint256 amount,
+        address tokenIn,
+        uint256 amountIn,
         string memory message,
         string memory file,
         bool isFungible
     ) public {
+        require(receiver != address(0), "Receiver Can't Be Zero Address");
+        require(amountIn > 0, "Insert Valid AmountIn");
+
+        // Makes sure that msg.sender has enough tokenIn balance
         require(
-            receiver != address(0),
-            "TokenTreats: Receiver Can't Be Zero Address"
+            IERC20(tokenIn).balanceOf(msg.sender) >= amountIn,
+            "Insufficient TokenIn Balance"
         );
-        require(amount > 0, "TokenTreats: Insert Valid Amount");
+
+        (bool success, bytes memory status) = address(tokenIn).call(
+            abi.encodeWithSelector(
+                IERC20(tokenIn).transferFrom.selector,
+                msg.sender,
+                address(this),
+                amountIn
+            )
+        );
+
+        require(
+            success && (status.length == 0 || abi.decode(status, (bool))),
+            "TokenIn Transfer Failed"
+        );
+
         treats.treatId.push(treatIds);
         treats.receiver[treatIds] = receiver;
-        treats.message[treatIds] = message;
         treats.sender[treatIds] = msg.sender;
+        treats.message[treatIds] = message;
         if (isFungible) {
             treats.isFungible[treatIds] = isFungible;
-            treats.amount[treatIds] = amount;
+            treats.amount[treatIds] = amountIn;
             treats.file[treatIds] = file;
         }
         treatIds++;
