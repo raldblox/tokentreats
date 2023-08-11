@@ -1,25 +1,33 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
+import "./FungibleTreatSwap.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {IEAS, AttestationRequest, AttestationRequestData} from "@ethereum-attestation-service/eas-contracts/contracts/IEAS.sol";
 import {NO_EXPIRATION_TIME, EMPTY_UID} from "@ethereum-attestation-service/eas-contracts/contracts/Common.sol";
 
-contract TokenTreatsRegistry {
+contract TokenTreatsCore {
     uint256 public treatIds;
     using SafeERC20 for IERC20;
 
     error InvalidEAS();
 
     IEAS private immutable _eas;
+    FungibleTreatSwap public fungibleTreatSwap; // FungibleSwap
+    ISwapRouter public uniswapV3Router; // Uniswap Router
 
-    constructor(IEAS eas) {
-        if (address(eas) == address(0)) {
-            revert InvalidEAS();
-        }
+    constructor() {
+        // Initialize FungibleTreatSwap and UniswapRouter
+        ISwapRouter _uniswapV3Router = ISwapRouter(
+            0xE592427A0AEce92De3Edee1F18E0157C05861564
+        ); // SwapRouter for Mainnet, Goerli, Arbitrum, Optimism, Polygon
 
-        // LIST OF EAS ADDRESS
+        fungibleTreatSwap = new FungibleTreatSwap(_uniswapV3Router);
+        uniswapV3Router = _uniswapV3Router;
+
+        // Initiliaze Ethereum Attestation Service
+        IEAS eas = IEAS(0x4200000000000000000000000000000000000020); // @note OPTIMISM GOERLI
         // OPTIMISM GOERLI: 0x4200000000000000000000000000000000000020
         // OPTIMISM MAINNET: 0x4200000000000000000000000000000000000021
         // ETHEREUM MAINNET: 0xA7b39296258348C78294F95B872b282326A97BDF
@@ -41,7 +49,7 @@ contract TokenTreatsRegistry {
     }
 
     Treats private treats;
-    mapping(address => uint[]) myTreats;
+    mapping(address => uint[]) public myTreats;
     mapping(address => IERC20) public fungibleTreats;
 
     function createTreats(

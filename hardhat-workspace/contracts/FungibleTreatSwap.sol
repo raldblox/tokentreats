@@ -5,7 +5,7 @@ pragma abicoder v2;
 import "@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 
-contract TokenTreatSwap {
+contract FungibleTreatSwap {
     ISwapRouter public immutable swapRouter;
 
     // This example swaps DAI/WETH9 for single path swaps and DAI/USDC/WETH9 for multi path swaps.
