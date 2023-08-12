@@ -16,6 +16,7 @@ export default function Home() {
   const [state, setState] = useState(false)
   const [tokenIn, setTokenIn] = useState("")
   const [myTreats, setMyTreats] = useState("")
+  const [redeemTreat, setRedeemTreat] = useState("")
   const [receiver, setReceiver] = useState("")
   const [tokenOut, setTokenOut] = useState("")
   const [amountIn, setAmountIn] = useState("")
@@ -148,8 +149,30 @@ export default function Home() {
           const signer = provider.getSigner();
           const walletAddress = await signer.getAddress();
           const treatIds = await tokenTreatsCore.getMyTreats(walletAddress);
-          console.log(`Fetched Treats:`, treatIds);
-          setMyTreats(treatIds);
+          const formatTreatIds = treatIds.map((id) => id.toNumber());
+
+
+          const treatDataPromises = formatTreatIds.map(async (treatId) => {
+            const data = await tokenTreatsCore.getTreatDetails(treatId);
+            const amountInWei = data[2];
+            const amountInEther = ethers.utils.formatEther(amountInWei);
+            const amountIn = parseFloat(amountInEther);
+
+            return {
+              treatId: treatId,
+              sender: data[1],
+              receiver: data[0],
+              amountIn: amountIn,
+              tokenIn: data[3],
+              isRedeemed: data[5]
+            };
+          });
+
+          // Wait for all details to be fetched
+          const fetchedTreatData = await Promise.all(treatDataPromises);
+          console.log(`Fetched Treats:`, fetchedTreatData);
+          setMyTreats(fetchedTreatData);
+
         } catch (error) {
           console.error(error);
         }
@@ -336,10 +359,19 @@ export default function Home() {
                     <div className='inline-block bg-gray-800 hover:bg-green-900 text-sm p-2  text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
                       <CardGiftcardOutlined />
                     </div>
-                    <input
-                      value=""
-                      onChange={(e) => setTreatId(e.target.value)}
-                      className='w-full text-base font-bold placeholder:text-left rounded-[30px] px-3 gradient h-full' placeholder='TREAT ID' />
+                    <select
+                      value={redeemTreat}
+                      onChange={(e) => setRedeemTreat(e.target.value)}
+                      className='w-full text-base font-bold placeholder:text-left rounded-[30px] px-3 gradient h-full'>
+                      <option value="">Select a Treat</option>
+                      {myTreats && <>
+                        {myTreats.map((treat) => (
+                          <option key={treat.treatId} value={treat.treatId} disabled={treat.isRedeemed} className='text-sm'>
+                            ID{treat.treatId} | {treat.amountIn} USD - {treat.isRedeemed ? "Redeemed" : "Redeemable"}
+                          </option>
+                        ))}
+                      </>}
+                    </select>
                   </div>
                   <div className='p-1 gap-1 border group justify-between items-center inline-flex border-orange-700 rounded-full w-full text-center'>
                     <div className='inline-block bg-gray-800 hover:bg-green-900 text-sm p-2  text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
