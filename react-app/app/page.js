@@ -258,7 +258,7 @@ export default function Home() {
 
                 <p className='text-sm'>QuickSend lets you brighten someone's day in a flash. Wallet address, USD amount, a dash of thoughtfulness – and voila, tokens and smiles are on their way!</p>
               </div>
-              <div className='h-full grid content-between w-full aspect-square col-span-1 p-5 card'>
+              <div className='h-full gap-5 grid content-between w-full aspect-square col-span-1 p-5 card'>
                 <form className='grid gap-2'>
                   <div className='p-1 border gap-1 group justify-between items-center inline-flex border-orange-700 rounded-full w-full text-center'>
                     <div className='inline-block bg-gray-800 hover:bg-green-900 text-sm p-2 text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
@@ -312,7 +312,7 @@ export default function Home() {
                 <button onClick={sendTreats} className='p-2 group justify-center items-center inline-flex border-orange-700 rounded-full w-full text-center'>
                   QuickSend Treats
                 </button>
-                <p className='text-xs mt-5'>NOTE: Testnet Network is set to <a href='https://goerli-optimism.etherscan.io/address/0xDe58ED7409e96f71A7FC0871162Bb5ba99B3E7f9' target='_blank' className='underline'>Optimism Goerli</a> with <a href='https://goerli-optimism.etherscan.io/address/0x32307adfFE088e383AFAa721b06436aDaBA47DBE' target='_blank' className='underline'>ERC20TestToken</a>.</p>
+                <p className='text-xs'>NOTE: Testnet Network is set to <a href='https://goerli-optimism.etherscan.io/address/0xDe58ED7409e96f71A7FC0871162Bb5ba99B3E7f9' target='_blank' className='underline'>Optimism Goerli</a> with <a href='https://goerli-optimism.etherscan.io/address/0x32307adfFE088e383AFAa721b06436aDaBA47DBE' target='_blank' className='underline'>ERC20TestToken</a>.</p>
               </div>
               <div className='h-full w-full gap-5 grid content-between aspect-square col-span-1 p-5 card'>
                 <h2 className='text-2xl font-bold gradient'>One, Two, Treats!</h2>
