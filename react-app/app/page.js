@@ -1,7 +1,7 @@
 "use client"
 
 import Profile from '@/components/signin/Profile';
-import { CurrencyExchangeOutlined, FileUploadOutlined, MessageOutlined, WalletRounded } from '@mui/icons-material';
+import { CardGiftcardOutlined, CurrencyExchangeOutlined, CurrencyExchangeTwoTone, FileUploadOutlined, MessageOutlined, PaymentOutlined, TokenOutlined, WalletRounded } from '@mui/icons-material';
 import Image from 'next/image'
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,12 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default function Home() {
   const [state, setState] = useState(false)
+  const [tokenIn, setTokenIn] = useState("")
+  const [tokenOut, setTokenOut] = useState("")
+  const [amountIn, setAmountIn] = useState("")
+  const [newtorkOut, setNetworkOut] = useState("")
+  const [message, setMessage] = useState("")
+  const [receiver, setReceiver] = useState("")
 
   const navigation = [
     { title: "Features", path: "javascript:void(0)" },
@@ -113,8 +119,8 @@ export default function Home() {
                     <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
                   </svg>
                 </button>
-                <a href="javascript:void(0)" className="flex items-center justify-center px-4 py-2 font-medium text-gray-700 duration-150 gap-x-1 hover:text-gray-900 md:inline-flex">
-                  Talk to Us
+                <a target='_blank' href="https://optimism-goerli-bedrock.easscan.org/attestation/attestWithSchema/0x238eeeb688987a65408aa7257d67fa066b0ea4b4f3d86a1d2f7d4b476ae5ef48" className="flex items-center justify-center px-4 py-2 font-medium text-gray-700 duration-150 gap-x-1 hover:text-gray-900 md:inline-flex">
+                  Who Loves Treats? Attest!
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                     <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
                   </svg>
@@ -131,41 +137,98 @@ export default function Home() {
               <div className='h-full grid content-between w-full aspect-square col-span-1 p-5 card'>
                 <form className='grid gap-2'>
                   <div className='p-1 border gap-1 group justify-between items-center inline-flex border-orange-700 rounded-full w-full text-center'>
-                    <button className='inline-block text-sm p-2 text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
+                    <div className='inline-block bg-gray-800 hover:bg-green-900 text-sm p-2 text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
                       <WalletRounded />
-                    </button>
-                    <input className='w-full text-base font-bold placeholder:text-left rounded-[30px] px-3 gradient h-full' placeholder='Wallet Address' />
+                    </div>
+                    <input
+                      value={receiver}
+                      onChange={(e) => setReceiver(e.target.value)}
+                      className='w-full text-base font-bold placeholder:text-left rounded-[30px] px-3 gradient h-full' placeholder='Receiver Address' />
                   </div>
                   <div className='p-1 gap-1 border group justify-between items-center inline-flex border-orange-700 rounded-full w-full text-center'>
-                    <button className='inline-block text-sm p-2  text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
+                    <div className='inline-block bg-gray-800 hover:bg-green-900 text-sm p-2  text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
+                      <PaymentOutlined />
+                    </div>
+                    <select
+                      value={tokenIn}
+                      onChange={(e) => setTokenIn(e.target.value)}
+                      className="w-full text-base font-bold placeholder:text-left rounded-[30px] px-3 gradient h-full"
+                    >
+                      <option value="">Token To Use</option>
+                      <option value="USDT">USDT</option>
+                      <option value="USDC">USDC</option>
+                      <option value="DAI">DAI</option>
+                      <option value="ETH">ETHEREUM</option>
+                    </select>
+                  </div>
+                  <div className='p-1 gap-1 border group justify-between items-center inline-flex border-orange-700 rounded-full w-full text-center'>
+                    <div className='inline-block bg-gray-800 hover:bg-green-900 text-sm p-2  text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
                       <CurrencyExchangeOutlined />
-                    </button>
-                    <input type='number' className='w-full text-base font-bold placeholder:text-left rounded-[30px] px-3 gradient h-full' placeholder='Value in USD' />
+                    </div>
+                    <input type='number'
+                      value={tokenIn}
+                      onChange={(e) => setTokenIn(e.target.value)}
+                      className='w-full text-base font-bold placeholder:text-left rounded-[30px] px-3 gradient h-full' placeholder='Token Amount' />
                   </div>
                   <div className='p-1 gap-1 border group justify-between items-center inline-flex border-orange-700 rounded-full w-full text-center'>
-                    <button className='inline-block text-sm p-2  text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
+                    <div className='inline-block bg-gray-800 hover:bg-green-900 text-sm p-2  text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
                       <MessageOutlined />
-                    </button>
-                    <input className='w-full pl-3 text-base font-bold placeholder:text-left rounded-[30px] px-3 py-1 gradient' placeholder='Insert Message' />
-                  </div>
-                  <div className='p-1 gap-1 border group justify-between items-center inline-flex border-orange-700 rounded-full w-full text-center'>
-                    <button className='inline-block text-sm p-2  text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
-                      <FileUploadOutlined />
-                    </button>
-                    <input className='w-full text-base font-bold placeholder:text-left rounded-[30px] px-3 py-1 gradient' placeholder='Attach Media Files' />
+                    </div>
+                    <input
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      className='w-full pl-3 text-base font-bold placeholder:text-left rounded-[30px] px-3 py-1 gradient' placeholder='Insert Message' />
                   </div>
 
                 </form>
                 <button href="/" className='p-2 group justify-center items-center inline-flex border-orange-700 rounded-full w-full text-center'>
-                  QuickSend Your Treats
+                  QuickSend Treats
                 </button>
               </div>
-              <div className='h-full group w-full grid content-between aspect-square col-span-1 p-5 card'>
+              <div className='h-full w-full gap-5 grid content-between aspect-square col-span-1 p-5 card'>
                 <h2 className='text-2xl font-bold gradient'>One, Two, Treats!</h2>
-                <div className='text-sm w-full flex items-center gap-2 font-bold mt-10 uppercase text-center'>
-                  <button className='bg-[#00000033] font-bold text-green-950 group-hover:text-white border-orange-600 group-hover:bg-green-900 uppercase'>Redeem</button>
-                  your rewards now!
-                </div>
+                <h2 className='text-lg font-bold gradient'>Redeem Your Treats Today</h2>
+                <form className='grid gap-2'>
+                  <div className='p-1 gap-1 border group justify-between items-center inline-flex border-orange-700 rounded-full w-full text-center'>
+                    <div className='inline-block bg-gray-800 hover:bg-green-900 text-sm p-2  text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
+                      <CardGiftcardOutlined />
+                    </div>
+                    <input
+                      value=""
+                      onChange={(e) => setTreatId(e.target.value)}
+                      className='w-full text-base font-bold placeholder:text-left rounded-[30px] px-3 gradient h-full' placeholder='TREAT ID' />
+                  </div>
+                  <div className='p-1 gap-1 border group justify-between items-center inline-flex border-orange-700 rounded-full w-full text-center'>
+                    <div className='inline-block bg-gray-800 hover:bg-green-900 text-sm p-2  text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
+                      <TokenOutlined />
+                    </div>
+                    <select
+                      value={newtorkOut}
+                      onChange={(e) => setNetworkOut(e.target.value)}
+                      className="w-full text-base font-bold placeholder:text-left rounded-[30px] px-3 gradient h-full"
+                    >
+                      <option value="">Select Network</option>
+                      <option value="Ethereum">Ethereum</option>
+                      <option value="Optimism">Optimism</option>
+                      <option value="Arbitrum">Arbitrum</option>
+                      <option value="Base">Base</option>
+                      <option value="Goerli">[TEST] Goerli</option>
+                      <option value="Goerli">[TEST] Optimism Goerli</option>
+                    </select>
+                  </div>
+                  <div className='p-1 border gap-1 group justify-between items-center inline-flex border-orange-700 rounded-full w-full text-center'>
+                    <div className='inline-block bg-gray-800 hover:bg-green-900 text-sm p-2 text-yellow-200 uppercase rounded-full  group-hover:bg-green-700'>
+                      <CurrencyExchangeOutlined />
+                    </div>
+                    <input
+                      value={tokenOut}
+                      onChange={(e) => setTokenOut(e.target.value)}
+                      className='w-full text-base font-bold placeholder:text-left rounded-[30px] px-3 gradient h-full' placeholder='Token Address' />
+                  </div>
+                </form>
+                <button href="/" className='p-2 group justify-center items-center inline-flex border-orange-700 rounded-full w-full text-center'>
+                  Redeem Treats
+                </button>
               </div>
               <div className='h-full w-full aspect-square p-5 rounded-[30px] bg-gradient-to-t lg:bg-gradient-to-tl from-[#ffc4128c] to-[transparent]'>
                 <h1><span className='italic font-bold'>Pick, Redeem, Repeat</span> – TokenTreats Fuses Blockchain Tokens, Verifiable Credentials, Digital Identities, NFT Marketplaces, Cross-Chain Messaging, and Decentralized Finance into a Single Hub for Your Loyalty Journey!</h1>
