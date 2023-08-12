@@ -1,8 +1,53 @@
-# Sample Hardhat Project
+# Token Treats Contracts
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+TokenTreatsCore is a Solidity smart contract that allows users to create and manage treat transfers on the Ethereum blockchain. It integrates with FungibleTreatSwap, based on [UniswapV3 SingleSwap](https://docs.uniswap.org/contracts/v3/guides/swaps/single-swaps), for swapping tokens and [Ethereum Attestation Service](https://docs.attest.sh/) for attesting treat-related data.
 
-Try running some of the following tasks:
+## Table of Contents
+
+- [Token Treats Contracts](#token-treats-contracts)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+  - [Usage](#usage)
+    - [Creating Treats](#creating-treats)
+    - [Redeeming Treats](#redeeming-treats)
+    - [Attesting Treats](#attesting-treats)
+    - [TokenTreatsCore](#tokentreatscore)
+    - [FungibleTreatSwap](#fungibletreatswap)
+  - [License](#license)
+  - [Disclaimer](#disclaimer)
+
+## Introduction
+
+TokenTreatsCore is a smart contract designed to facilitate treat transfers on the Ethereum/EVM-compatible blockchain. It allows users to create treats, swap tokens using FungibleTreatSwap, and attest treat-related request using Ethereum Attestation Service.
+
+## Getting Started
+
+### Prerequisites
+
+- Solidity compiler (version 0.8.9 or compatible)
+- OpenZeppelin contracts (for SafeERC20, IERC20)
+- Ethereum Attestation Service contracts (IEAS, AttestationRequest, Common)
+- Uniswap v3 Router contract (ISwapRouter)
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/raldblox/tokentreats.git
+cd tokentreats
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Some useful hardhat commands::
 
 ```shell
 npx hardhat help
@@ -13,3 +58,34 @@ npx hardhat run scripts/deploy.js
 npx hardhat run --network opgoerli scripts/deploy.js
 npx hardhat verify --network opgoerli [CONTRACT_ADDRESS]
 ```
+
+## Usage
+
+### Creating Treats
+
+The `createTreats` function allows users to create treats and specify details such as the receiver, tokenIn, amountIn, message, file, and whether it's fungible.
+
+### Redeeming Treats
+
+The `redeemTreats` function is used to redeem treats. It swaps tokens using FungibleTreatSwap and updates treat details accordingly.
+
+### Attesting Treats
+
+The `attestTreats` function attests treat-related data using Ethereum Attestation Service.
+Contract Details
+
+### TokenTreatsCore
+
+This contract manages the creation, redemption, and attestation of treats.
+
+### FungibleTreatSwap
+
+This contract provides functions for swapping tokens using Uniswap v3's router.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Disclaimer
+
+This documentation is for educational and informational purposes only. It does not constitute financial or legal advice. Use this information at your own risk
