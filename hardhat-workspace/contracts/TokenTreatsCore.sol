@@ -135,6 +135,7 @@ contract TokenTreatsCore is Ownable {
             treats.file[treatIds] = file;
             treats.isRedeemed[treatIds] = false;
             treatReceivers[treatIds] = msg.sender;
+            myTreats[receiver].push(treatIds);
 
             emit TreatCreated(
                 treatIds,
