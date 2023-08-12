@@ -14,7 +14,7 @@ contract TokenTreatsCore {
     error InvalidEAS();
 
     IEAS private immutable _eas;
-    FungibleTreatSwap public fungibleTreatSwap; // FungibleSwap
+    FungibleTreatSwap public fungibleTreatSwap; // FungibleSwap Contract
     ISwapRouter public uniswapV3Router; // Uniswap Router
 
     constructor() {
@@ -54,6 +54,22 @@ contract TokenTreatsCore {
 
     Treats private treats;
     mapping(uint => address) public myTreats;
+
+    event TreatCreated(
+        uint256 treatId,
+        address sender,
+        address receiver,
+        uint256 amountIn,
+        address tokenIn,
+        bool isFungible
+    );
+
+    event TreatRedeemed(
+        uint256 treatId,
+        address redeemer,
+        uint256 amountOut,
+        address tokenOut
+    );
 
     function createTreats(
         address receiver,
@@ -97,23 +113,59 @@ contract TokenTreatsCore {
             treats.file[treatIds] = file;
             treats.isRedeemed[treatIds] = false;
             myTreats[treatIds] = msg.sender;
+
+            emit TreatCreated(
+                treatIds,
+                msg.sender,
+                receiver,
+                amountIn,
+                tokenIn,
+                isFungible
+            );
+
             treatIds++;
         }
     }
 
     function redeemTreats(address tokenOut, uint treatId) external {
         require(tokenOut != address(0), "TokenOut not supported or invalid");
-        require(
-            treats.isRedeemed[treatId],
-            "Fungible token not supported or invalid"
-        );
+        require(!treats.isRedeemed[treatId], "Treats already Redeemed");
         require(
             treats.receiver[treatIds] == msg.sender,
-            "Fungible token not supported or invalid"
+            "Sender is not the Treat's Receiver"
         );
 
-        // SingleSwap Logics
+        bool fungible = treats.isFungible[treatIds];
 
+        if (fungible) {
+            // SingleSwap Logics
+
+            // Initiliaze Swap Tokens
+            address[] memory path = new address[](2);
+            path[0] = treats.tokenIn[treatIds]; // from this token
+            path[1] = tokenOut; // to this Token
+
+            // Swap Tokens using FungibleTreatSwap
+            uint256 amountIn = treats.amountIn[treatId];
+            address tokenIn = treats.tokenIn[treatId];
+            uint256 amountOut = fungibleTreatSwap.swapExactInputSingle(
+                amountIn,
+                tokenIn,
+                tokenOut
+            );
+            // Set amountIn to zero
+            treats.amountIn[treatId] = 0;
+
+            // Record tokenOut Transaction
+            treats.tokenOut[treatId] = tokenOut;
+            treats.amountOut[treatId] = amountOut;
+
+            emit TreatRedeemed(treatId, msg.sender, amountOut, tokenOut);
+        } else {
+            // NFT Logics
+        }
+
+        // Update Redeem Status
         treats.isRedeemed[treatIds] = true;
     }
 
