@@ -101,8 +101,8 @@ const page = () => {
                     </p>
                 </div>
                 <div className="mt-12">
-                    <h3 className="text-green-960 text-xl uppercase font-bold mb-10">
-                        The Problems we are trying to solve
+                    <h3 className="text-green-960 underline text-xl uppercase font-bold mb-10">
+                        The Problems we are solving
                     </h3>
                     <ul className="grid gap-y-8 gap-x-5 sm:grid-cols-1 lg:grid-cols-3">
                         {
@@ -120,14 +120,14 @@ const page = () => {
                     </ul>
                 </div>
                 <div className="mt-12">
-                    <h3 className="text-green-960 text-xl uppercase font-bold mb-10">
+                    <h3 className="text-green-960 underline text-xl uppercase font-bold mb-10">
                         OUR SOLUTION
                     </h3>
                     <h1 className='text-5xl'>TokenTreats!</h1>
                 </div>
                 <div className="mt-12">
-                    <h3 className="text-green-960 text-xl uppercase font-bold mb-10">
-                        TokenTreats Features
+                    <h3 className="text-green-960 text-xl underline uppercase font-bold mb-10">
+                        OUR Features
                     </h3>
                     <ul className="grid gap-y-8 gap-x-12 sm:grid-cols-1 lg:grid-cols-2">
                         {
