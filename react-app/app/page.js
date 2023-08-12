@@ -6,7 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import ERC20ABI from "@/libraries/ERC20ABI.json";
-import tokenTreatsCoreABI from "@/libraries/tokenTreatsCoreABI.json";
+import tokenTreatsCoreABI from "@/libraries/TokenTreatsCoreABI.json";
 import { optimism } from '@/libraries/DeployedAddresses';
 import { OptimismgGoerliUselessToken } from '@/libraries/CryptoAddresses';
 // const ethers = require("ethers")
@@ -15,6 +15,7 @@ import { ethers } from "ethers";
 export default function Home() {
   const [state, setState] = useState(false)
   const [tokenIn, setTokenIn] = useState("")
+  const [myTreats, setMyTreats] = useState("")
   const [receiver, setReceiver] = useState("")
   const [tokenOut, setTokenOut] = useState("")
   const [amountIn, setAmountIn] = useState("")
@@ -144,6 +145,25 @@ export default function Home() {
       }
     }
   };
+
+  useEffect(() => {
+    const fetchTreats = async () => {
+      if (tokenTreatsCore) {
+        try {
+          console.log(`Fetching Treats...`);
+          const signer = provider.getSigner();
+          const walletAddress = await signer.getAddress();
+          const treatIds = await tokenTreatsCore.getMyTreats(walletAddress);
+          console.log(`Fetched Treats:`, treatIds);
+          setMyTreats(treatIds);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+
+    fetchTreats();
+  }, [tokenTreatsCore]);
 
 
 
