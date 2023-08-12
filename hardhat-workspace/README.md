@@ -2,9 +2,17 @@
 
 TokenTreatsCore is a Solidity smart contract that allows users to create and manage treat transfers on the Ethereum blockchain. It integrates with FungibleTreatSwap, based on [UniswapV3 SingleSwap](https://docs.uniswap.org/contracts/v3/guides/swaps/single-swaps), for swapping tokens and [Ethereum Attestation Service](https://docs.attest.sh/) for attesting treat-related data.
 
+## Deployments
+
+- **TokenTreatsCore**
+- Optimism Goerli: [0xDe58ED7409e96f71A7FC0871162Bb5ba99B3E7f9](https://goerli-optimism.etherscan.io/address/0xDe58ED7409e96f71A7FC0871162Bb5ba99B3E7f9#code)
+- Base Goerli: [0x42F11590Cd4C5606a7d81cC264Aa3A1307C22f52](https://goerli.basescan.org/address/0x42F11590Cd4C5606a7d81cC264Aa3A1307C22f52#code)
+- Zora Goerli: [0xNOTCOMPATIBLEYET](https://testnet.explorer.zora.energy/)
+
 ## Table of Contents
 
 - [Token Treats Contracts](#token-treats-contracts)
+  - [Deployments](#deployments)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Getting Started](#getting-started)
@@ -55,8 +63,9 @@ npx hardhat test
 REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat run scripts/deploy.js
-npx hardhat run --network opgoerli scripts/deploy.js
-npx hardhat verify --network opgoerli [CONTRACT_ADDRESS]
+npx hardhat run scripts/deploy.js --network op-goerli
+npx hardhat verify CONTRACT_ADDRESS --network op-goerli
+npx hardhat verify --list-networks
 ```
 
 ## Usage
