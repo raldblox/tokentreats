@@ -53,7 +53,8 @@ contract TokenTreatsCore {
     }
 
     Treats private treats;
-    mapping(uint => address) public myTreats;
+    mapping(address => uint[]) public myTreats;
+    mapping(uint => address) public treatReceivers;
 
     event TreatCreated(
         uint256 treatId,
@@ -112,7 +113,7 @@ contract TokenTreatsCore {
             treats.isFungible[treatIds] = isFungible;
             treats.file[treatIds] = file;
             treats.isRedeemed[treatIds] = false;
-            myTreats[treatIds] = msg.sender;
+            treatReceivers[treatIds] = msg.sender;
 
             emit TreatCreated(
                 treatIds,
@@ -197,24 +198,42 @@ contract TokenTreatsCore {
             );
     }
 
-    function processFungibleTreats(
-        address receiver,
-        address tokenAddress,
-        uint amount
-    ) public {
-        // 1. Pro
+    function getTreatCount() external view returns (uint256) {
+        return treatIds;
     }
 
-    function processNonFungibleTreats(
-        address receiver,
-        address tokenAddress,
-        uint qty
-    ) public {
-        //
+    function getTreatDetails(
+        uint256 treatId
+    )
+        external
+        view
+        returns (
+            address receiver,
+            address sender,
+            uint256 amountIn,
+            address tokenIn,
+            bool isFungible,
+            string memory message,
+            string memory file,
+            bool isRedeemed
+        )
+    {
+        require(treatId < treatIds, "Treat not found");
+        return (
+            treats.receiver[treatId],
+            treats.sender[treatId],
+            treats.amountIn[treatId],
+            treats.tokenIn[treatId],
+            treats.isFungible[treatId],
+            treats.message[treatId],
+            treats.file[treatId],
+            treats.isRedeemed[treatId]
+        );
     }
 
-    function calculateFungibleTreatsAmount() internal pure returns (uint256) {
-        // to implement token calculation logic
-        return 100; // Example amount
+    function getMyTreats(
+        address user
+    ) external view returns (uint256[] memory) {
+        return myTreats[user];
     }
 }
