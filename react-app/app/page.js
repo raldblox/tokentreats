@@ -91,21 +91,17 @@ export default function Home() {
       if (provider && tokenTreatsCore && ERC20Token && tokenIn) {
         const signer = provider.getSigner();
         const walletAddress = await signer.getAddress();
-        const amountInEther = ethers.utils.formatEther(filePriceInWei);
-        const amount = parseFloat(amountInEther);
 
-        console.log(`Approving token spending ${amount} token ${tokenIn}`);
-
-
+        console.log(`Approving token spending ${amountIn} token ${tokenIn}`);
 
         // Check if enough balance
-        if (balance.lt(await ERC20Token.balanceOf(walletAddress))) {
-          console.log("Insufficient tokens; Your current balance is:", balance);
+        if (amountIn.lt(await ERC20Token.balanceOf(walletAddress))) {
+          console.log("Insufficient tokens; Your current balance is:", amountIn);
           return;
         }
 
         // Prompt to approve token
-        const approveTokenSpending = await ERC20Token.approve(optimism.CoreGoerli, amount);
+        const approveTokenSpending = await ERC20Token.approve(optimism.CoreGoerli, amountIn);
         await approveTokenSpending.wait();
         return true;
 
@@ -123,11 +119,22 @@ export default function Home() {
         if (provider && tokenTreatsCore && tokenIn && amountIn) {
           const signer = provider.getSigner();
           const walletAddress = await signer.getAddress();
-          console.log(`AddressIn: ${walletAddress}; TokenIn: ${tokenIn}; AmountIn: ${amountIn}`);
+          // Format amount with 10**18 decimals
+          const amountInDecimals = ethers.BigNumber.from(amountIn).mul(ethers.BigNumber.from(10).pow(18));
+          console.log(`AddressIn: ${walletAddress}; TokenIn: ${tokenIn}; AmountIn: ${amountInDecimals}`);
+
+          // Check if enough balance
+          const balance = await ERC20Token.balanceOf(walletAddress);
+          console.log(`Balance: ${balance}; Amount: ${amountInDecimals.toString()}`);
+          if (amountInDecimals.gt(balance)) {
+            console.log("Insufficient tokens; Your current balance is:", ethers.utils.formatUnits(balance, decimals));
+            return;
+          }
 
           // Prompt to pay; Default Setting: Fungible Deposit, No File Upload
-          const transaction = await tokenTreatsCore.createTreats(receiver, tokenIn, amountIn, message, "", true);
+          const transaction = await tokenTreatsCore.createTreats(receiver, tokenIn, amountInDecimals, message, "", true);
           await transaction.wait();
+
 
           console.log("Treats created successfully");
           alert("Treats created successfully")
