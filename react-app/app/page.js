@@ -9,7 +9,8 @@ import ERC20ABI from "@/libraries/ERC20ABI.json";
 import tokenTreatsCoreABI from "@/libraries/tokenTreatsCoreABI.json";
 import { optimism } from '@/libraries/DeployedAddresses';
 import { OptimismgGoerliUselessToken } from '@/libraries/CryptoAddresses';
-const ethers = require("ethers")
+// const ethers = require("ethers")
+import { ethers } from "ethers";
 
 export default function Home() {
   const [state, setState] = useState(false)
@@ -19,7 +20,7 @@ export default function Home() {
   const [amountIn, setAmountIn] = useState("")
   const [newtorkOut, setNetworkOut] = useState("")
   const [message, setMessage] = useState("")
-  const [provider, setProvider] = useState("")
+  const [provider, setProvider] = useState(null)
   const [ERC20Token, setERC20Token] = useState("")
   const [tokenTreatsCore, setTokenTreatsCore] = useState("")
 
@@ -49,58 +50,16 @@ export default function Home() {
     }
   ]
 
-  const handleApproval = async () => {
-    try {
-      // Check if instances are set
-      if (provider && tokenTreatsCore && ERC20Token && tokenIn) {
-        const signer = provider.getSigner();
-        const walletAddress = await signer.getAddress();
-        console.log(`Approving token spending for ${tokenIn}`);
-
-        // Prompt to approve token
-        const approveTokenSpending = await ERC20Token.approve(tokenIn, amountIn);
-        await approveTokenSpending.wait();
-
-        console.log(`Token spending approved successful.`);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const sendTreats = async () => {
-    handleApproval();
-    try {
-      if (provider && tokenTreatsCore && tokenIn && amountIn) {
-        const signer = provider.getSigner();
-        const walletAddress = await signer.getAddress();
-        console.log(`AddressIn: ${walletAddress}; TokenIn: ${tokenIn}; AmountIn: ${amountIn}`);
-
-        // Check Balance
-        const balance = await ERC20Token.balanceOf(walletAddress);
-        if (balance.lt(amountIn)) {
-          console.log("Insufficient tokens; Your current balance is:", balance);
-          return;
-        }
-
-        // Use Test Token on Goerli
-        const testTokenIn = OptimismgGoerliUselessToken.OUT1;
-        // Prompt to pay; Default Setting: Fungible Deposit, No File Upload
-        const transaction = await tokenTreatsCore.createTreats(receiver, testTokenIn, amountIn, message, "", true);
-        await transaction.wait();
-
-        console.log("Treats created successfully");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
-    console.log("Initiliazing provider...");
     const initProvider = async () => {
+      // Use Test Token on Goerli
+      const testTokenIn = OptimismgGoerliUselessToken.OUT1;
+      setTokenIn(testTokenIn); // Set Default Coin for testing
+      console.log("TestToken set as TokenIn set. OK.");
+
       if (window.ethereum) {
         try {
+          console.log("Setting Provider.");
           await window.ethereum.enable();
           const provider = new ethers.providers.Web3Provider(window.ethereum);
           setProvider(provider);
@@ -119,12 +78,67 @@ export default function Home() {
           console.error(error);
         }
       } else {
-        console.error("Please install MetaMask to use this application.");
+        console.error("Please install MetaMask.");
       }
     };
 
     initProvider();
   }, [tokenIn]);
+
+  const handleApproval = async () => {
+    try {
+      // Check if instances are set
+      if (provider && tokenTreatsCore && ERC20Token && tokenIn) {
+        const signer = provider.getSigner();
+        const walletAddress = await signer.getAddress();
+        const amountInEther = ethers.utils.formatEther(filePriceInWei);
+        const amount = parseFloat(amountInEther);
+
+        console.log(`Approving token spending ${amount} token ${tokenIn}`);
+
+
+
+        // Check if enough balance
+        if (balance.lt(await ERC20Token.balanceOf(walletAddress))) {
+          console.log("Insufficient tokens; Your current balance is:", balance);
+          return;
+        }
+
+        // Prompt to approve token
+        const approveTokenSpending = await ERC20Token.approve(optimism.CoreGoerli, amount);
+        await approveTokenSpending.wait();
+        return true;
+
+        console.log(`Token spending approved successful.`);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const sendTreats = async () => {
+    const approved = handleApproval();
+    if (approved) {
+      try {
+        if (provider && tokenTreatsCore && tokenIn && amountIn) {
+          const signer = provider.getSigner();
+          const walletAddress = await signer.getAddress();
+          console.log(`AddressIn: ${walletAddress}; TokenIn: ${tokenIn}; AmountIn: ${amountIn}`);
+
+          // Prompt to pay; Default Setting: Fungible Deposit, No File Upload
+          const transaction = await tokenTreatsCore.createTreats(receiver, tokenIn, amountIn, message, "", true);
+          await transaction.wait();
+
+          console.log("Treats created successfully");
+          alert("Treats created successfully")
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+
 
   useEffect(() => {
     document.onclick = (e) => {
@@ -272,8 +286,8 @@ export default function Home() {
                     </div>
                     <input type='number'
                       required
-                      value={tokenIn}
-                      onChange={(e) => setTokenIn(e.target.value)}
+                      value={amountIn}
+                      onChange={(e) => setAmountIn(e.target.value)}
                       className='w-full text-base font-bold placeholder:text-left rounded-[30px] px-3 gradient h-full' placeholder='Token Amount' />
                   </div>
                   <div className='p-1 gap-1 border group justify-between items-center inline-flex border-orange-700 rounded-full w-full text-center'>
