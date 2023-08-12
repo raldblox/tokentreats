@@ -57,8 +57,9 @@ module.exports = {
     apiKey: {
       "base-goerli": process.env.BASE_ETHERSCAN,
       "zora-goerli": process.env.ZORA_ETHERSCAN,
-      "op-goerli": process.env.OP_ETHERSCAN,
     },
+    apiKey: process.env.OP_ETHERSCAN
+    ,
     customChains: [
       {
         network: "base-goerli",
