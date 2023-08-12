@@ -280,7 +280,7 @@ export default function Home() {
                       onChange={(e) => setTokenIn(e.target.value)}
                       className="w-full text-base font-bold placeholder:text-left rounded-[30px] px-3 gradient h-full"
                     >
-                      <option value="">Token To Use</option>
+                      <option value="">TestToken In Use</option>
                       <option value="USDT">USDT</option>
                       <option value="USDC">USDC</option>
                       <option value="DAI">DAI</option>
@@ -312,6 +312,7 @@ export default function Home() {
                 <button onClick={sendTreats} className='p-2 group justify-center items-center inline-flex border-orange-700 rounded-full w-full text-center'>
                   QuickSend Treats
                 </button>
+                <p className='text-xs mt-5'>NOTE: Testnet Network is set to <a href='https://goerli-optimism.etherscan.io/address/0xDe58ED7409e96f71A7FC0871162Bb5ba99B3E7f9' target='_blank' className='underline'>Optimism Goerli</a> with <a href='https://goerli-optimism.etherscan.io/address/0x32307adfFE088e383AFAa721b06436aDaBA47DBE' target='_blank' className='underline'>ERC20TestToken</a>.</p>
               </div>
               <div className='h-full w-full gap-5 grid content-between aspect-square col-span-1 p-5 card'>
                 <h2 className='text-2xl font-bold gradient'>One, Two, Treats!</h2>
