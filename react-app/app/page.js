@@ -23,6 +23,25 @@ export default function Home() {
     { title: "Pricing", path: "javascript:void(0)" }
   ]
 
+  const footerNavs = [
+    {
+      href: 'javascript:void()',
+      name: 'Terms'
+    },
+    {
+      href: 'javascript:void()',
+      name: 'License'
+    },
+    {
+      href: 'javascript:void()',
+      name: 'Privacy'
+    },
+    {
+      href: 'javascript:void()',
+      name: 'About us'
+    }
+  ]
+
   useEffect(() => {
     document.onclick = (e) => {
       const target = e.target;
@@ -238,7 +257,41 @@ export default function Home() {
           </div>
         </section>
       </div>
-
+      <footer className="pt-10">
+        <div className="max-w-screen-xl mx-auto px-4 md:px-8">
+          <div className="space-y-6 sm:max-w-lg sm:mx-auto sm:text-center">
+            <img
+              src="/xlogo.svg"
+              width={200}
+              height={50}
+              alt="Token Treats Logo"
+              className="w-52 sm:mx-auto"
+            />
+            <p>
+              Redefining Loyalty with Personalized Blockchain Rewards
+            </p>
+            <div className="items-center gap-x-3 space-y-3 sm:flex sm:justify-center sm:space-y-0">
+              <a href="api/auth/login" className="block py-2 px-4 text-center text-white font-medium button duration-150 shadow-lg hover:shadow-none">
+                Get Early Access
+              </a>
+            </div>
+          </div>
+          <div className="mt-10 py-10 border-t items-center justify-between sm:flex">
+            <p>© 2022 TokenTreats. All rights reserved.</p>
+            <ul className="flex flex-wrap items-center gap-4 mt-6 sm:text-sm sm:mt-0">
+              {
+                footerNavs.map((item, idx) => (
+                  <li className="text-gray-800 hover:text-yellow-200 duration-150">
+                    <a key={idx} href={item.href}>
+                      {item.name}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
