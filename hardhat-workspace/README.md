@@ -5,9 +5,9 @@ TokenTreatsCore is a Solidity smart contract that allows users to create and man
 ## Deployments
 
 - **TokenTreatsCore**
-- Optimism Goerli: [0xDe58ED7409e96f71A7FC0871162Bb5ba99B3E7f9](https://goerli-optimism.etherscan.io/address/0xDe58ED7409e96f71A7FC0871162Bb5ba99B3E7f9#code)
-- Base Goerli: [0x42F11590Cd4C5606a7d81cC264Aa3A1307C22f52](https://goerli.basescan.org/address/0x42F11590Cd4C5606a7d81cC264Aa3A1307C22f52#code)
-- Zora Goerli: [0xNOTCOMPATIBLEYET](https://testnet.explorer.zora.energy/)
+- Optimism Goerli: [0x641adC152a7D6C8f5A3A59c26596aa71A3A4Ae40](https://goerli-optimism.etherscan.io/address/0x641adC152a7D6C8f5A3A59c26596aa71A3A4Ae40#code)
+- Base Goerli: [0xbd2320795a69444796EA8D8628A492cc9b56a579](https://goerli.basescan.org/address/0xbd2320795a69444796EA8D8628A492cc9b56a579#code)
+- Zora Goerli: UNISWAP NOT COMPATIBLE YET
 
 ## Table of Contents
 

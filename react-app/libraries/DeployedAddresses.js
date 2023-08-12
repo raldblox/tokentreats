@@ -1,11 +1,11 @@
 export const optimism = {
     CoreMainnet: "",
-    CoreGoerli: "0xDe58ED7409e96f71A7FC0871162Bb5ba99B3E7f9",
+    CoreGoerli: "0x641adC152a7D6C8f5A3A59c26596aa71A3A4Ae40",
 };
 
 export const base = {
     CoreMainnet: "",
-    CoreGoerli: "0x42F11590Cd4C5606a7d81cC264Aa3A1307C22f52",
+    CoreGoerli: "0xbd2320795a69444796EA8D8628A492cc9b56a579",
 };
 
 export const zora = {
