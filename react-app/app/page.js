@@ -94,12 +94,12 @@ export default function Home() {
         <section>
           <div className="max-w-screen-xl gap-16 px-4 mx-auto py-28 md:px-8 md:flex">
             <div className='flex-none max-w-lg space-y-10'>
-              <a href="javascript:void(0)" className='inline-flex items-center p-1 pr-6 text-sm font-medium border border-orange-900 rounded-full hover:shadow-xl group gap-x-6 bg-gradient-to-r hover:from-green-900 hover:to-green-700'>
+              <a href="/deck" className='inline-flex items-center p-1 pr-6 text-sm font-medium border border-orange-900 rounded-full hover:shadow-xl group gap-x-6 bg-gradient-to-r hover:from-green-900 hover:to-green-700'>
                 <span className='inline-block px-3 py-1 bg-[#00000057] text-yellow-200 uppercase rounded-full group-hover:bg-green-700'>
-                  News
+                  DECK
                 </span>
                 <p className='flex items-center'>
-                  Read the launch post
+                  Personalized Blockchain Rewards
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                     <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
                   </svg>
