@@ -95,12 +95,6 @@ export default function Home() {
 
         console.log(`Approving token spending ${amountIn} token ${tokenIn}`);
 
-        // Check if enough balance
-        if (amountIn.lt(await ERC20Token.balanceOf(walletAddress))) {
-          console.log("Insufficient tokens; Your current balance is:", amountIn);
-          return;
-        }
-
         // Prompt to approve token
         const approveTokenSpending = await ERC20Token.approve(optimism.CoreGoerli, amountIn);
         await approveTokenSpending.wait();
@@ -128,7 +122,7 @@ export default function Home() {
           const balance = await ERC20Token.balanceOf(walletAddress);
           console.log(`Balance: ${balance}; Amount: ${amountInDecimals.toString()}`);
           if (amountInDecimals.gt(balance)) {
-            console.log("Insufficient tokens; Your current balance is:", ethers.utils.formatUnits(balance, decimals));
+            alert("Insufficient tokens; Your current balance is:", ethers.utils.formatUnits(balance, 0));
             return;
           }
 
