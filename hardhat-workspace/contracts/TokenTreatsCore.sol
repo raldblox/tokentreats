@@ -1,20 +1,24 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.9;
 
 import "./FungibleTreatSwap.sol";
+import "./NonFungibleFactory.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {IEAS, AttestationRequest, AttestationRequestData} from "@ethereum-attestation-service/eas-contracts/contracts/IEAS.sol";
 import {NO_EXPIRATION_TIME, EMPTY_UID} from "@ethereum-attestation-service/eas-contracts/contracts/Common.sol";
 
-contract TokenTreatsCore {
+contract TokenTreatsCore is Ownable {
     uint256 public treatIds;
     using SafeERC20 for IERC20;
 
     error InvalidEAS();
 
-    IEAS private immutable _eas;
+    IEAS private _eas;
     FungibleTreatSwap public fungibleTreatSwap; // FungibleSwap Contract
+    // NonFungibleFactory public nonFungibleFactory; // FungibleSwap Contract
     ISwapRouter public uniswapV3Router; // Uniswap Router
 
     constructor() {
@@ -71,6 +75,23 @@ contract TokenTreatsCore {
         uint256 amountOut,
         address tokenOut
     );
+
+    // Upgrade the UniswapV3 Router contract address
+    function upgradeUniswapV3Router(address newRouter) external onlyOwner {
+        uniswapV3Router = ISwapRouter(newRouter);
+    }
+
+    // Upgrade the FungibleTreatSwap contract address
+    function upgradeFungibleTreatSwap(
+        address newFungibleTreatSwap
+    ) external onlyOwner {
+        fungibleTreatSwap = FungibleTreatSwap(newFungibleTreatSwap);
+    }
+
+    // Upgrade the Ethereum Attestation Service contract address
+    function upgradeEAS(address newEAS) external onlyOwner {
+        _eas = IEAS(newEAS);
+    }
 
     function createTreats(
         address receiver,
@@ -137,6 +158,8 @@ contract TokenTreatsCore {
         );
 
         bool fungible = treats.isFungible[treatIds];
+        uint256 amountIn = treats.amountIn[treatId];
+        address tokenIn = treats.tokenIn[treatId];
 
         if (fungible) {
             // SingleSwap Logics
@@ -147,13 +170,12 @@ contract TokenTreatsCore {
             path[1] = tokenOut; // to this Token
 
             // Swap Tokens using FungibleTreatSwap
-            uint256 amountIn = treats.amountIn[treatId];
-            address tokenIn = treats.tokenIn[treatId];
             uint256 amountOut = fungibleTreatSwap.swapExactInputSingle(
                 amountIn,
                 tokenIn,
                 tokenOut
             );
+
             // Set amountIn to zero
             treats.amountIn[treatId] = 0;
 
@@ -164,6 +186,33 @@ contract TokenTreatsCore {
             emit TreatRedeemed(treatId, msg.sender, amountOut, tokenOut);
         } else {
             // NFT Logics
+
+            // Initialiaze Supported NFT Collection
+            NonFungibleFactory nonFungibleFactory = NonFungibleFactory(
+                tokenOut
+            );
+
+            // Initialiaze NFT Creator
+            address royaltyReceiver = nonFungibleFactory.creator();
+
+            // Transfer tokenIn to the NFT Creator
+            (bool success, bytes memory data) = address(tokenIn).call(
+                abi.encodeWithSelector(
+                    IERC20(tokenIn).transferFrom.selector,
+                    address(this),
+                    royaltyReceiver,
+                    amountIn
+                )
+            );
+
+            require(
+                success && (data.length == 0 || abi.decode(data, (bool))),
+                "TokenIn Transfer Failed"
+            );
+
+            if (success) {
+                nonFungibleFactory.mint(msg.sender);
+            }
         }
 
         // Update Redeem Status
