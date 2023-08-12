@@ -113,12 +113,12 @@ export default function Home() {
                 from <span className='font-black'>fungibles</span> to <span className='font-black'>non-fungibles</span>, tokentreats lets you craft and define your dream rewards!
               </p>
               <div className='flex items-center gap-x-3 sm:text-sm'>
-                <button href="javascript:void(0)" className="flex items-center justify-center ">
+                <a href="/api/auth/login" className="flex button items-center justify-center ">
                   Join the waitlist
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                     <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
                   </svg>
-                </button>
+                </a>
                 <a target='_blank' href="https://optimism-goerli-bedrock.easscan.org/attestation/attestWithSchema/0x238eeeb688987a65408aa7257d67fa066b0ea4b4f3d86a1d2f7d4b476ae5ef48" className="flex items-center justify-center px-4 py-2 font-medium text-gray-700 duration-150 gap-x-1 hover:text-gray-900 md:inline-flex">
                   Who Loves Treats? Attest!
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
