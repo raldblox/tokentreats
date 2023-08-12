@@ -114,7 +114,7 @@ export default function Home() {
   };
 
   const sendTreats = async () => {
-    const approved = handleApproval();
+    const approved = await handleApproval();
     if (approved) {
       try {
         if (provider && tokenTreatsCore && tokenIn && amountIn) {
