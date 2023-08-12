@@ -26,33 +26,56 @@ module.exports = {
     localhost: {
       url: "http://127.0.0.1:8545",
     },
-    opgoerli: {
+    "op-goerli": {
       url: process.env.OPTIMISM_GOERLI_URL,
       accounts: [process.env.PRIVATE_KEY],
     },
-    opmainnet: {
+    "op-mainnet": {
       url: process.env.OPTIMISM_MAINNET_URL,
       accounts: [process.env.PRIVATE_KEY],
     },
-    basemainnet: {
+    "base-mainnet": {
       url: 'https://mainnet.base.org',
       accounts: [process.env.PRIVATE_KEY],
       gasPrice: 1000000000,
     },
-    basegoerli: {
+    "base-goerli": {
       url: 'https://goerli.base.org',
       accounts: [process.env.PRIVATE_KEY],
       gasPrice: 1000000000,
     },
-    zoragoerli: {
+    "zora-goerli": {
       url: 'https://testnet.rpc.zora.energy/',
       accounts: [process.env.PRIVATE_KEY],
-    }, zoramainnet: {
+    },
+    "zora-mainnet": {
       url: 'https://mainnet.rpc.zora.energy/',
       accounts: [process.env.PRIVATE_KEY],
     },
   },
   etherscan: {
-    apiKey: process.env.API_ETHERSCAN,
+    apiKey: {
+      "base-goerli": process.env.BASE_ETHERSCAN,
+      "zora-goerli": process.env.ZORA_ETHERSCAN,
+      "op-goerli": process.env.OP_ETHERSCAN,
+    },
+    customChains: [
+      {
+        network: "base-goerli",
+        chainId: 84531,
+        urls: {
+          apiURL: "https://api-goerli.basescan.org/api",
+          browserURL: "https://goerli.basescan.org"
+        }
+      },
+      {
+        network: "zora-goerli",
+        chainId: 999,
+        urls: {
+          apiURL: "https://testnet.rpc.zora.energy/",
+          browserURL: "https://testnet.explorer.zora.energy/"
+        }
+      }
+    ]
   },
 };
