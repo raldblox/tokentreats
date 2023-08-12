@@ -5,16 +5,23 @@ import { CardGiftcardOutlined, CurrencyExchangeOutlined, CurrencyExchangeTwoTone
 import Image from 'next/image'
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useUser } from '@auth0/nextjs-auth0/client';
+import ERC20ABI from "@/libraries/ERC20ABI.json";
+import tokenTreatsCoreABI from "@/libraries/tokenTreatsCoreABI.json";
+import { optimism } from '@/libraries/DeployedAddresses';
+import { OptimismgGoerliUselessToken } from '@/libraries/CryptoAddresses';
+const ethers = require("ethers")
 
 export default function Home() {
   const [state, setState] = useState(false)
   const [tokenIn, setTokenIn] = useState("")
+  const [receiver, setReceiver] = useState("")
   const [tokenOut, setTokenOut] = useState("")
   const [amountIn, setAmountIn] = useState("")
   const [newtorkOut, setNetworkOut] = useState("")
   const [message, setMessage] = useState("")
-  const [receiver, setReceiver] = useState("")
+  const [provider, setProvider] = useState("")
+  const [ERC20Token, setERC20Token] = useState("")
+  const [tokenTreatsCore, setTokenTreatsCore] = useState("")
 
   const navigation = [
     { title: "Features", path: "javascript:void(0)" },
@@ -41,6 +48,83 @@ export default function Home() {
       name: 'About us'
     }
   ]
+
+  const handleApproval = async () => {
+    try {
+      // Check if instances are set
+      if (provider && tokenTreatsCore && ERC20Token && tokenIn) {
+        const signer = provider.getSigner();
+        const walletAddress = await signer.getAddress();
+        console.log(`Approving token spending for ${tokenIn}`);
+
+        // Prompt to approve token
+        const approveTokenSpending = await ERC20Token.approve(tokenIn, amountIn);
+        await approveTokenSpending.wait();
+
+        console.log(`Token spending approved successful.`);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const sendTreats = async () => {
+    handleApproval();
+    try {
+      if (provider && tokenTreatsCore && tokenIn && amountIn) {
+        const signer = provider.getSigner();
+        const walletAddress = await signer.getAddress();
+        console.log(`AddressIn: ${walletAddress}; TokenIn: ${tokenIn}; AmountIn: ${amountIn}`);
+
+        // Check Balance
+        const balance = await ERC20Token.balanceOf(walletAddress);
+        if (balance.lt(amountIn)) {
+          console.log("Insufficient tokens; Your current balance is:", balance);
+          return;
+        }
+
+        // Use Test Token on Goerli
+        const testTokenIn = OptimismgGoerliUselessToken.OUT1;
+        // Prompt to pay; Default Setting: Fungible Deposit, No File Upload
+        const transaction = await tokenTreatsCore.createTreats(receiver, testTokenIn, amountIn, message, "", true);
+        await transaction.wait();
+
+        console.log("Treats created successfully");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    console.log("Initiliazing provider...");
+    const initProvider = async () => {
+      if (window.ethereum) {
+        try {
+          await window.ethereum.enable();
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          setProvider(provider);
+          console.log("Provider set.");
+
+          const ERC20Token = new ethers.Contract(tokenIn, ERC20ABI, provider.getSigner());
+          setERC20Token(ERC20Token);
+          console.log("ERC20 instance set.");
+
+          // OP-GOERLI
+          const tokenTreatsCore = new ethers.Contract(optimism.CoreGoerli, tokenTreatsCoreABI, provider.getSigner());
+          setTokenTreatsCore(tokenTreatsCore);
+          console.log("TokenTreatsCore instance set.");
+
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        console.error("Please install MetaMask to use this application.");
+      }
+    };
+
+    initProvider();
+  }, [tokenIn]);
 
   useEffect(() => {
     document.onclick = (e) => {
@@ -160,6 +244,7 @@ export default function Home() {
                       <WalletRounded />
                     </div>
                     <input
+                      required
                       value={receiver}
                       onChange={(e) => setReceiver(e.target.value)}
                       className='w-full text-base font-bold placeholder:text-left rounded-[30px] px-3 gradient h-full' placeholder='Receiver Address' />
@@ -169,6 +254,7 @@ export default function Home() {
                       <PaymentOutlined />
                     </div>
                     <select
+                      required
                       value={tokenIn}
                       onChange={(e) => setTokenIn(e.target.value)}
                       className="w-full text-base font-bold placeholder:text-left rounded-[30px] px-3 gradient h-full"
@@ -185,6 +271,7 @@ export default function Home() {
                       <CurrencyExchangeOutlined />
                     </div>
                     <input type='number'
+                      required
                       value={tokenIn}
                       onChange={(e) => setTokenIn(e.target.value)}
                       className='w-full text-base font-bold placeholder:text-left rounded-[30px] px-3 gradient h-full' placeholder='Token Amount' />
@@ -194,13 +281,14 @@ export default function Home() {
                       <MessageOutlined />
                     </div>
                     <input
+                      required
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       className='w-full pl-3 text-base font-bold placeholder:text-left rounded-[30px] px-3 py-1 gradient' placeholder='Insert Message' />
                   </div>
 
                 </form>
-                <button href="/" className='p-2 group justify-center items-center inline-flex border-orange-700 rounded-full w-full text-center'>
+                <button onClick={sendTreats} className='p-2 group justify-center items-center inline-flex border-orange-700 rounded-full w-full text-center'>
                   QuickSend Treats
                 </button>
               </div>
@@ -258,8 +346,8 @@ export default function Home() {
         </section>
       </div>
       <footer className="pt-10">
-        <div className="max-w-screen-xl mx-auto px-4 md:px-8">
-          <div className="space-y-6 sm:max-w-lg sm:mx-auto sm:text-center">
+        <div className="max-w-screen-xl mx-auto px-4 md:px-8 ">
+          <div className="space-y-6 sm:max-w-lg sm:mx-auto sm:text-center grid">
             <img
               src="/xlogo.svg"
               width={200}
@@ -276,7 +364,7 @@ export default function Home() {
               </a>
             </div>
           </div>
-          <div className="mt-10 py-10 border-t items-center justify-between sm:flex">
+          <div className="mt-10 py-10 items-center justify-between sm:flex">
             <p>© 2022 TokenTreats. All rights reserved.</p>
             <ul className="flex flex-wrap items-center gap-4 mt-6 sm:text-sm sm:mt-0">
               {
