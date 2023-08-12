@@ -39,22 +39,22 @@ contract TokenTreatsCore {
 
     struct Treats {
         uint256[] treatId;
-        mapping(uint => bool) isRedeemed;
-        mapping(uint => address) receiver;
-        mapping(uint => address) sender;
-        mapping(uint => uint) amountIn;
-        mapping(uint => uint) amountOut;
-        mapping(uint => address) tokenIn;
-        mapping(uint => address) tokenOut;
-        mapping(uint => string) message;
-        mapping(uint => string) file;
-        mapping(uint => bool) isFungible;
-        mapping(uint => address) tokenAddress; // @note if fungible, need to specify the desired token as treats
+        mapping(uint256 => bool) isRedeemed;
+        mapping(uint256 => address) receiver;
+        mapping(uint256 => address) sender;
+        mapping(uint256 => uint256) amountIn;
+        mapping(uint256 => uint256) amountOut;
+        mapping(uint256 => address) tokenIn;
+        mapping(uint256 => address) tokenOut;
+        mapping(uint256 => string) message;
+        mapping(uint256 => string) file;
+        mapping(uint256 => bool) isFungible;
+        mapping(uint256 => address) tokenAddress; // @note if fungible, need to specify the desired token as treats
     }
 
     Treats private treats;
-    mapping(address => uint[]) public myTreats;
-    mapping(uint => address) public treatReceivers;
+    mapping(address => uint256[]) public myTreats;
+    mapping(uint256 => address) public treatReceivers;
 
     event TreatCreated(
         uint256 treatId,
@@ -128,7 +128,7 @@ contract TokenTreatsCore {
         }
     }
 
-    function redeemTreats(address tokenOut, uint treatId) external {
+    function redeemTreats(address tokenOut, uint256 treatId) external {
         require(tokenOut != address(0), "TokenOut not supported or invalid");
         require(!treats.isRedeemed[treatId], "Treats already Redeemed");
         require(
@@ -213,8 +213,6 @@ contract TokenTreatsCore {
             uint256 amountIn,
             address tokenIn,
             bool isFungible,
-            string memory message,
-            string memory file,
             bool isRedeemed
         )
     {
@@ -225,8 +223,6 @@ contract TokenTreatsCore {
             treats.amountIn[treatId],
             treats.tokenIn[treatId],
             treats.isFungible[treatId],
-            treats.message[treatId],
-            treats.file[treatId],
             treats.isRedeemed[treatId]
         );
     }
