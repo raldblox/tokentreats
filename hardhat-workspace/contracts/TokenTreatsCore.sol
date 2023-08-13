@@ -7,10 +7,11 @@ import "./NonFungibleFactory.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import {IEAS, AttestationRequest, AttestationRequestData} from "@ethereum-attestation-service/eas-contracts/contracts/IEAS.sol";
 import {NO_EXPIRATION_TIME, EMPTY_UID} from "@ethereum-attestation-service/eas-contracts/contracts/Common.sol";
 
-contract TokenTreatsCore is Ownable {
+contract TokenTreatsCore is Ownable, ReentrancyGuard {
     uint256 public treatIds;
     using SafeERC20 for IERC20;
 
@@ -100,7 +101,7 @@ contract TokenTreatsCore is Ownable {
         string memory message,
         string memory file,
         bool isFungible
-    ) public {
+    ) external nonReentrant {
         require(receiver != address(0), "Receiver Can't Be Zero Address");
         require(amountIn > 0, "Insert Valid AmountIn");
 
@@ -150,7 +151,10 @@ contract TokenTreatsCore is Ownable {
         }
     }
 
-    function redeemTreats(address tokenOut, uint256 treatId) external {
+    function redeemTreats(
+        address tokenOut,
+        uint256 treatId
+    ) external nonReentrant {
         require(tokenOut != address(0), "TokenOut not supported or invalid");
         require(!treats.isRedeemed[treatId], "Treats already Redeemed");
         require(
@@ -212,6 +216,10 @@ contract TokenTreatsCore is Ownable {
             );
 
             if (success) {
+                // Set amountIn to zero
+                treats.amountIn[treatId] = 0;
+
+                // Mint NFT to receiver
                 nonFungibleFactory.mint(msg.sender);
             }
         }
@@ -220,6 +228,7 @@ contract TokenTreatsCore is Ownable {
         treats.isRedeemed[treatIds] = true;
     }
 
+    // @note Link to EAS Schema at Optimism Goerli: https://optimism-goerli-bedrock.easscan.org/attestation/attestWithSchema/0x238eeeb688987a65408aa7257d67fa066b0ea4b4f3d86a1d2f7d4b476ae5ef48
     function attestTreats(
         bytes32 schema,
         address whoLovesTreats,
